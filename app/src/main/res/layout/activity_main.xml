@@ -35,7 +35,7 @@
             android:layout_margin="4dp"
             android:layout_weight="1"
             android:text="Settings"
-            android:textSize="14sp" />
+            android:textSize="13dp" />
 
         <Button
             android:id="@+id/score"
@@ -58,8 +58,8 @@
             android:layout_margin="4dp"
             android:layout_weight="2"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="next guess" />
+            android:hint="next guess"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/submit"
