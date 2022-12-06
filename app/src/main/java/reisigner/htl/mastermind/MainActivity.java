@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Saver saver;
 
     int round;
+    boolean gameFinished = false;
 
     private ArrayList<String> items = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     items.clear();
                     mAdapter.notifyDataSetChanged();
                     mml.newGame();
+                    round = 0;
+                    gameFinished = false;
                 }
             }
         });
@@ -91,12 +94,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view.getId() == R.id.submit) {
             System.out.println("clicked");
-            if (!guess.getText().equals("") && isInAlphapth(guess.getText().toString()) && guess.getText().toString().length() == config.getCodeLength()) {
+            if (!guess.getText().equals("") && isInAlphapth(guess.getText().toString()) && guess.getText().toString().length() == config.getCodeLength() && !gameFinished) {
                 round++;
                 if (guess.getText().toString().equals(mml.getCode())) {
+                    gameFinished = true;
                     items.add("Solved");
                     items.add("NEW GAME");
                 }else if (round == config.getGuessRounds()) {
+                    gameFinished = true;
                     items.add("Not Solved");
                     items.add("NEW GAME");
                 } else {
@@ -125,10 +130,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             items.add("NEW GAME");
             mAdapter.notifyDataSetChanged();
         } else if(view.getId() == R.id.save) {
-            System.out.println("items");
             Status s = new Status(round, items, mml.getCode());
             saver.safe(s, getApplicationContext());
+        } else if(view.getId() == R.id.load) {
+            items.clear();
+            mAdapter.notifyDataSetChanged();
 
+            Status s = saver.load(getApplicationContext());
+            round = s.getGuessedRounds();
+            mml.setCode(s.getCode());
+            items.addAll(s.getList());
+            mAdapter.notifyDataSetChanged();
         }
     }
 
