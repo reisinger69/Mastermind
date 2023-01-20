@@ -15,7 +15,6 @@ public class MasterMindLogic {
     private String code;
 
     public MasterMindLogic(FileReader fr) {
-        System.out.println("Constructor: " + fr.getCodeLength());
         this.alphabet = fr.getAlphabet();
         this.guessRounds = fr.getGuessRounds();
         this.codeLength = fr.getCodeLength();
@@ -54,19 +53,18 @@ public class MasterMindLogic {
     }
 
     public String getSigns(String input) {
-        ArrayList<Character> usedChars = new ArrayList<>();
+        StringBuilder checkCode = new StringBuilder(code);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            if (input.charAt(i) == code.charAt(i) && !usedChars.contains(code.charAt(i))) {
-                usedChars.add(code.charAt(i));
+            if (input.charAt(i) == checkCode.charAt(i)) {
+                checkCode.setCharAt(i, ' ');
                 sb.append(correctPositionSign).append(" ");
-            }
-        }
-        for (int i = 0; i < input.length(); i++) {
-            for (int j = 0; j < code.length(); j++) {
-                if (input.charAt(i) == code.charAt(j)  && !usedChars.contains(code.charAt(i))) {
-                    usedChars.add(code.charAt(i));
-                    sb.append(correctCodeElementSign).append(" ");
+            } else {
+                for (int j = 0; j < code.length(); j++) {
+                    if (input.charAt(i) == checkCode.charAt(j)) {
+                        checkCode.setCharAt(j, ' ');
+                        sb.append(correctCodeElementSign).append(" ");
+                    }
                 }
             }
         }
